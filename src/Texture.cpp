@@ -25,7 +25,6 @@ namespace
 rdr::Texture::Texture(std::filesystem::path texturePath)
     : m_path(std::move(texturePath))
 {
-    int width, height, channelsNumber;
     m_data = stbi_load(m_path.u8string().c_str(), &m_width, &m_height, &m_numChannels, 0);
 
     glGenTextures(1, &m_id);

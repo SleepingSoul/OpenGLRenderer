@@ -15,5 +15,10 @@ void rdr::OpenGLRenderer::initialize(
 
     glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 
-    m_shaderProgram = ShaderProgram(vertexShaderPath, fragmentShaderPath);
+    //m_shaderProgram = ShaderProgram(vertexShaderPath, fragmentShaderPath);
+
+    glGenBuffers(1, &m_VBO);
+    glGenVertexArrays(1, &m_VAO);
+    glBindVertexArray(m_VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 }

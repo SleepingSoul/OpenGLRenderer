@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 #include <ShaderProgram.h>
+#include "DrawCall.h"
 
 
 namespace rdr
@@ -18,15 +19,28 @@ namespace rdr
             , const std::filesystem::path& fragmentShaderPath);
 
         // Any container of rdr::DrawCall's
-        template <class TContainer>
-        void render(const TContainer& drawCalls);
 
-        bool inValidState() const { return m_window && m_shaderProgram; }
+        void render(const std::vector<DrawCall>& drawCalls);
+
+        bool isValidState() const { return m_window && m_shaderProgram; }
 
     private:
         GLFWwindow* m_window;
         ShaderProgram m_shaderProgram;
+        GLuint m_VBO;
+        GLuint m_VAO;
     };
-}
 
-#include "OpenGLRenderer.inl"
+    inline void OpenGLRenderer::render(const std::vector<rdr::DrawCall>& drawCalls)
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        std::vector<float> verticesData;
+        verticesData.reserve(drawCalls.size() * 5);
+
+        for (const auto& drawCall : drawCalls)
+        {
+            //verticesData.insert(verticesData.cend(), drawCall.vertices);
+        }
+    }
+}
