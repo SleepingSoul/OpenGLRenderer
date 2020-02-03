@@ -2,13 +2,18 @@
 #include "OpenGLRenderer.h"
 
 
+const float VoxelVertexData[] = {
+     0.5f,  0.5f, 0.0f, 1.0f, 1.0f,   // top right
+     0.5f, -0.5f, 0.0f, 1.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,   // bottom left
+    -0.5f,  0.5f, 0.0f, 0.0f, 1.0f    // top left 
+};
+
 void rdr::OpenGLRenderer::initialize(
-      GLFWwindow* window
-    , const glm::vec4& clearColor
+      const glm::vec4& clearColor
     , const std::filesystem::path& vertexShaderPath
     , const std::filesystem::path& fragmentShaderPath)
 {
-    m_window = window;
     // load OpenGL DLLs
     // TODO: handle errors
     gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
@@ -21,4 +26,19 @@ void rdr::OpenGLRenderer::initialize(
     glGenVertexArrays(1, &m_VAO);
     glBindVertexArray(m_VAO);
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+}
+
+void rdr::OpenGLRenderer::render(std::vector<rdr::DrawCall>& drawCalls)
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    //std::sort(drawCalls.begin(), drawCalls.end(), [](const rdr::DrawCall& a, const rdr::DrawCall& b)
+    //{
+    //    return a.texture < b.texture;
+    //});
+
+    for (const auto& drawCall : drawCalls)
+    {
+        //verticesData.insert(verticesData.cend(), drawCall.vertices);
+    }
 }

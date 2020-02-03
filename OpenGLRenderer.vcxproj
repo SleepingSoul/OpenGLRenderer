@@ -60,11 +60,11 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>glad.lib;glfw3dll.lib;GIU32.Lib;OpenGL32.Lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glad.lib;glfw3dll.lib;GlU32.Lib;OpenGL32.Lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(ProjectDir)\external\debug64\glfw3.dll $(ProjectDir)</Command>
+      <Command>xcopy /Y $(ProjectDir)\external\debug64\glfw3.dll $(ProjectDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -87,7 +87,7 @@
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(ProjectDir)\external\release64\glfw3.dll $(ProjectDir)</Command>
+      <Command>xcopy /Y $(ProjectDir)\external\release64\glfw3.dll $(ProjectDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -98,9 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenGLRenderer.cpp" />
-    <ClInclude Include="include\OpenGLRenderer.inl">
-      <FileType>CppCode</FileType>
-    </ClInclude>
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\test.cpp" />
     <ClCompile Include="src\Texture.cpp" />

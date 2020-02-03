@@ -1,16 +1,14 @@
 #pragma once
 
-#include <Texture.h>
-
 namespace rdr
 {
+    class CubeMap;
+    class ShaderProgram;
+
     struct DrawCall
     {
-        //using VextexData = glm::vec<5, float>;
-
-        const Texture* texture;
+        ShaderProgram* shader;
+        const CubeMap* texture;
         glm::vec3 position;
-        
-        //std::vector<VextexData> vertices;
     };
 }

@@ -22,44 +22,30 @@ namespace
     }
 }
 
-rdr::Texture::Texture(std::filesystem::path texturePath)
-    : m_path(std::move(texturePath))
+rdr::CubeMap::CubeMap(std::array<std::filesystem::path, 6> cubeMapTextures)
 {
+    for (const auto& path : cubeMapTextures)
+    {
+
+    }
+
     m_data = stbi_load(m_path.u8string().c_str(), &m_width, &m_height, &m_numChannels, 0);
 
-    glGenTextures(1, &m_id);
-    glBindTexture(GL_TEXTURE_2D, m_id);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
+    if (!m_data)
+    {
+        return;
+    }
 
-rdr::Texture::~Texture()
-{
+    glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_id);
+    glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    const auto format = channelsNumberToFormat(m_numChannels);
+    glTexStorage2D(m_id, )
+    glTexImage2D(m_id, 0, format, static_cast<GLsizei>(m_width), static_cast<GLsizei>(m_height), 0, format, GL_UNSIGNED_BYTE, m_data);
+    glGenerateTextureMipmap(m_id);
+
     stbi_image_free(m_data);
 }
-
-void rdr::Texture::loadToGPU()
-{
-    glBindTexture(GL_TEXTURE_2D, m_id);
-    if (m_data)
-    {
-        auto const format = channelsNumberToFormat(m_numChannels);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, static_cast <GLsizei>(m_width), static_cast <GLsizei>(m_height),
-            0, format, GL_UNSIGNED_BYTE, m_data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    m_isInGPU = true;
-}
-
-void rdr::Texture::unloadFromGPU()
-{
-    glDeleteTextures(1, &m_id);
-    m_isInGPU = false;
-}
-
-

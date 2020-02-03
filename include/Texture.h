@@ -1,39 +1,37 @@
 #pragma once
 
 #include <filesystem>
+#include <array>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
 namespace rdr
 {
-    class Texture
+    class CubeMap
     {
     public:
         using TextureID = GLuint;
 
-        Texture(std::filesystem::path textureFile);
-        ~Texture();
+        struct TextureData
+        {
+            TextureID id{ 0 };
+            GLsizei width{ 0 };
+            GLsizei height{ 0 };
+        };
 
+        CubeMap(std::array<std::filesystem::path, 6> cubeMapTextures);
 
-        auto getSize() const { return glm::ivec2(m_width, m_height); }
-
-        void loadToGPU();
-        void unloadFromGPU();
-        bool isInGPU() const { return m_isInGPU; }
-
-        const auto& getPath() const { return m_path; }
+        auto getSizeOf(std::size_t index) const { return glm::ivec2(m_width, m_height); }
 
         bool isValid() const { m_width > 0 && m_height > 0 && m_numChannels > 0; }
         operator bool() const { return isValid(); }
 
     private:
-        unsigned char* m_data;
-        TextureID m_id;
-        int m_width;
-        int m_height;
-        int m_numChannels;
+        std::array<TextureData, 6> m_cubeMapTextures;
+        int m_width{ 0 };
+        int m_height{ 0 };
+        int m_numChannels{ 0 };
 
         std::filesystem::path m_path;
-        bool m_isInGPU;
     };
 }

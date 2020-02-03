@@ -13,14 +13,11 @@ namespace rdr
     {
     public:
         void initialize(
-              GLFWwindow* window
-            , const glm::vec4& clearColor
+              const glm::vec4& clearColor
             , const std::filesystem::path& vertexShaderPath
             , const std::filesystem::path& fragmentShaderPath);
 
-        // Any container of rdr::DrawCall's
-
-        void render(const std::vector<DrawCall>& drawCalls);
+        void render(std::vector<DrawCall>& drawCalls);
 
         bool isValidState() const { return m_window && m_shaderProgram; }
 
@@ -30,17 +27,4 @@ namespace rdr
         GLuint m_VBO;
         GLuint m_VAO;
     };
-
-    inline void OpenGLRenderer::render(const std::vector<rdr::DrawCall>& drawCalls)
-    {
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        std::vector<float> verticesData;
-        verticesData.reserve(drawCalls.size() * 5);
-
-        for (const auto& drawCall : drawCalls)
-        {
-            //verticesData.insert(verticesData.cend(), drawCall.vertices);
-        }
-    }
 }
