@@ -32,10 +32,7 @@ void rdr::OpenGLRenderer::render(std::vector<rdr::DrawCall>& drawCalls)
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    //std::sort(drawCalls.begin(), drawCalls.end(), [](const rdr::DrawCall& a, const rdr::DrawCall& b)
-    //{
-    //    return a.texture < b.texture;
-    //});
+    std::sort(drawCalls.begin(), drawCalls.end());
 
     for (const auto& drawCall : drawCalls)
     {

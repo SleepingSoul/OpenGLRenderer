@@ -1,11 +1,24 @@
 #include "Texture.h"
 
+#pragma warning(push, 1)
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#pragma warning(pop)
+
+#include "utils.h"
 
 
 namespace
 {
+    std::array<std::filesystem::path, 6> faces{
+        "right.jpg",
+        "left.jpg",
+        "top.jpg",
+        "bottom.jpg",
+        "front.jpg",
+        "back.jpg"
+    };
+
     GLenum channelsNumberToFormat(int channelsNumber)
     {
         switch (channelsNumber)
@@ -22,30 +35,32 @@ namespace
     }
 }
 
-rdr::CubeMap::CubeMap(std::array<std::filesystem::path, 6> cubeMapTextures)
+rdr::CubeMap::CubeMap(const std::filesystem::path& cubeMapTextures)
 {
-    for (const auto& path : cubeMapTextures)
-    {
-
-    }
-
-    m_data = stbi_load(m_path.u8string().c_str(), &m_width, &m_height, &m_numChannels, 0);
-
-    if (!m_data)
-    {
-        return;
-    }
-
     glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_id);
-    glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    for (size_t i = 0; i < 6; ++i)
+    {
+        auto& currentTextureData = m_cubeMapTextures.at(i);
+
+        auto path = faces[i];
+        stbi_uc* const data = stbi_load(path.u8string().c_str(), &currentTextureData.width, &currentTextureData.height,
+            &currentTextureData.numChannels, 0);
+
+        if (assertcheck(!data, "Failed to load texture!"))
+        {
+            continue;
+        }
+
+        const auto format = channelsNumberToFormat(currentTextureData.numChannels);
+
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(i), 0, format, currentTextureData.width, currentTextureData.height, 0,
+            format, GL_UNSIGNED_BYTE, data);
+
+        stbi_image_free(data);
+    }
+    glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    const auto format = channelsNumberToFormat(m_numChannels);
-    glTexStorage2D(m_id, )
-    glTexImage2D(m_id, 0, format, static_cast<GLsizei>(m_width), static_cast<GLsizei>(m_height), 0, format, GL_UNSIGNED_BYTE, m_data);
-    glGenerateTextureMipmap(m_id);
-
-    stbi_image_free(m_data);
 }

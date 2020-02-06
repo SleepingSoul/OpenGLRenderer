@@ -14,23 +14,18 @@ namespace rdr
 
         struct TextureData
         {
-            TextureID id{ 0 };
             GLsizei width{ 0 };
             GLsizei height{ 0 };
+            int numChannels{ 0 };
         };
 
-        CubeMap(std::array<std::filesystem::path, 6> cubeMapTextures);
+        CubeMap(const std::filesystem::path& cubeMapTextures);
 
-        auto getSizeOf(std::size_t index) const { return glm::ivec2(m_width, m_height); }
-
-        bool isValid() const { m_width > 0 && m_height > 0 && m_numChannels > 0; }
-        operator bool() const { return isValid(); }
+        auto getID() const { return m_id; }
 
     private:
+        TextureID m_id{ 0 };
         std::array<TextureData, 6> m_cubeMapTextures;
-        int m_width{ 0 };
-        int m_height{ 0 };
-        int m_numChannels{ 0 };
 
         std::filesystem::path m_path;
     };

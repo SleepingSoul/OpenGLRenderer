@@ -17,6 +17,7 @@ namespace rdr
             , const std::filesystem::path& vertexShaderPath
             , const std::filesystem::path& fragmentShaderPath);
 
+        void setCameraPosition(const glm::vec3& cameraPosition);
         void render(std::vector<DrawCall>& drawCalls);
 
         bool isValidState() const { return m_window && m_shaderProgram; }
