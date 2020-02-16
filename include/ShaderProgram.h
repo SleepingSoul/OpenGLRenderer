@@ -8,8 +8,12 @@
 #include <fstream>
 #include <array>
 
+#include <utils.h>
+
 namespace rdr
 {
+    DeclareInfoException(ShaderNotCompiled);
+
     class ShaderProgram
     {
     public:

@@ -1,4 +1,6 @@
 #include "ShaderProgram.h"
+#include <iterator>
+
 
 rdr::ShaderProgram::ShaderProgram(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath)
     : m_ID(0)
@@ -11,10 +13,10 @@ rdr::ShaderProgram::ShaderProgram(const std::filesystem::path& vertexShaderPath,
     std::ifstream vertexFile(vertexShaderPath, std::ios::in),
         fragmentFile(fragmentShaderPath, std::ios::in);
 
-    std::string vertexCode, fragmentCode;
+    std::string vertexCode{ std::istreambuf_iterator<char>(vertexFile), std::istreambuf_iterator<char>() };
+    std::string fragmentCode{ std::istreambuf_iterator<char>(fragmentFile), std::istreambuf_iterator<char>() };
 
-    vertexFile >> vertexCode;
-    fragmentFile >> fragmentCode;
+    //fragmentFile.read(fragmentCode);
 
     const GLuint vertexID = glCreateShader(GL_VERTEX_SHADER),
         fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -48,7 +50,7 @@ void rdr::ShaderProgram::validateShader(GLuint ID)
     GLint success = 0;
 
     glGetShaderiv(ID, GL_COMPILE_STATUS, &success);
-    if (success != 0)
+    if (success == 0)
     {
         ErrorInfoBuffer buffer;
         glGetShaderInfoLog(ID, 1024, NULL, buffer.data());
@@ -61,7 +63,7 @@ void rdr::ShaderProgram::validateShaderProgram(GLuint ID)
     GLint success = 0;
 
     glGetProgramiv(ID, GL_LINK_STATUS, &success);
-    if (success != 0)
+    if (success == 0)
     {
         ErrorInfoBuffer buffer;
         glGetProgramInfoLog(ID, 1024, NULL, buffer.data());
@@ -82,4 +84,6 @@ void rdr::ShaderProgram::writeErrorInfo(const rdr::ShaderProgram::ErrorInfoBuffe
     }
 
     std::copy(source.cbegin(), source.cend(), std::back_inserter(m_errorInfo));
+
+    throw ShaderNotCompiled(m_errorInfo);
 }

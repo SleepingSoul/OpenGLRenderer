@@ -1,9 +1,21 @@
 #pragma once
 
-#define error(message) assert(!message)
+namespace rdr_impl
+{
+    class InfoException : public std::exception
+    {
+    public:
+        InfoException(std::string info) : m_info(std::move(info)) {}
+        const char* what() const override { return m_info.c_str(); }
+    private:
+        std::string m_info;
+    };
+}
 
-#define assertcheck(expression, message) [result = expression]\
+#define DeclareInfoException(name)\
+class name final : public rdr_impl::InfoException\
 {\
-    assert(result && message);\
-    return result;\
-}()
+public:\
+    using Base = rdr_impl::InfoException;\
+    using Base::Base;\
+}
