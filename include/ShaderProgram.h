@@ -8,6 +8,8 @@
 #include <fstream>
 #include <array>
 
+#include <glm/glm.hpp>
+
 #include <utils.h>
 
 namespace rdr
@@ -37,6 +39,11 @@ namespace rdr
         void setFloat(const std::string_view& name, float value) noexcept
         {
             glUniform1f(glGetUniformLocation(m_ID, name.data()), value);
+        }
+
+        void setVec4f(const std::string_view& name, const glm::vec4& value)
+        {
+            glUniform4f(glGetUniformLocation(m_ID, name.data()), value.r, value.g, value.b, value.a);
         }
 
         void setMatrix4f(const std::string_view& name, const float* data) noexcept

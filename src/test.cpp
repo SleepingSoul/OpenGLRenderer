@@ -3,6 +3,12 @@
 #include <OpenGLRenderer.h>
 #include <OpenGLGLFWContext.h>
 
+
+namespace tweaks
+{
+    bool t_DebugMode = true;
+}
+
 int main()
 {
     rdr::OpenGLGLFWContext::InitParameters params;
@@ -41,6 +47,11 @@ int main()
     while (context.windowShoudNotClose())
     {
         glClear(GL_COLOR_BUFFER_BIT);
+
+        const float timeValue = static_cast<float>(glfwGetTime());
+        float greenValue = sin(timeValue) / 2.0f + 0.5f;
+
+        shader.setVec4f("debugColor", glm::vec4(0.f, greenValue, 0.f, 1.f));
 
         glDrawArrays(GL_LINE_LOOP, 0, 3);
         glPointSize(5.f);
