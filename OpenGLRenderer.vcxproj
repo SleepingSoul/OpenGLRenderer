@@ -93,14 +93,14 @@
   <ItemGroup>
     <ClInclude Include="include\DrawCall.h" />
     <ClInclude Include="include\OpenGLGLFWContext.h" />
-    <ClInclude Include="include\OpenGLRenderer.h" />
+    <ClInclude Include="include\OpenGLVoxelRenderer.h" />
     <ClInclude Include="include\ShaderProgram.h" />
     <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OpenGLGLFWContext.cpp" />
-    <ClCompile Include="src\OpenGLRenderer.cpp" />
+    <ClCompile Include="src\OpenGLVoxelRenderer.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\test.cpp" />
     <ClCompile Include="src\Texture.cpp" />

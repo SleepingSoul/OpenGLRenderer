@@ -37,6 +37,9 @@ namespace rdr
 
     private:
         GLFWwindow* m_window;
+        std::string m_title;
+        double m_lastTimeStamp{ 0. };
+        unsigned m_FPS{ 0 };
         std::function<void(int, int)> onResize;
     };
 }

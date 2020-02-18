@@ -13,6 +13,7 @@ namespace rdr_private
 }
 
 rdr::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
+    : m_title(initParams.windowTitle)
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, initParams.verMajor);
@@ -51,6 +52,12 @@ bool rdr::OpenGLGLFWContext::windowShoudNotClose() const noexcept(true)
 
 void rdr::OpenGLGLFWContext::onFrameEnd()
 {
+    const double frameEndTimeStamp = glfwGetTime();
+    m_FPS = static_cast<unsigned>(1. / (frameEndTimeStamp - m_lastTimeStamp));
+    m_lastTimeStamp = frameEndTimeStamp;
+
+    glfwSetWindowTitle(m_window, estd::format("%s, fps: %u", m_title.c_str(), m_FPS).c_str());
+
     glfwSwapBuffers(m_window);
     glfwPollEvents();
 }

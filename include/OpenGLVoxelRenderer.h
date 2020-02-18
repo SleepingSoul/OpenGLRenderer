@@ -9,17 +9,16 @@
 
 namespace rdr
 {
-    class OpenGLRenderer
+    class OpenGLVoxelRenderer
     {
     public:
-        OpenGLRenderer();
-
-        //void debugRender();
-        
+        OpenGLVoxelRenderer();
         void setClearColor(const glm::vec4& rgbaColor);
+        void renderVoxels();
 
     private:
-        GLuint m_VBO;
-        GLuint m_VAO;
+        GLuint m_voxelVBO;
+        GLuint m_voxelVAO;
+        ShaderProgram m_voxelShader;
     };
 }
