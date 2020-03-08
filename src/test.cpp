@@ -6,11 +6,6 @@
 #include <future>
 
 
-namespace tweaks
-{
-    bool t_DebugMode = true;
-}
-
 int main()
 {
     auto retVal = std::async(std::launch::async, []
@@ -27,26 +22,6 @@ int main()
         // After context is initialized, we can create an OpenGL Renderer to render using the existing context. Only 1 contexts exists
         // and renderer will render into this context.
         rdr::OpenGLVoxelRenderer renderer;
-
-        GLuint VAO;
-        glGenVertexArrays(1, &VAO);
-
-        GLuint VBO;
-        glGenBuffers(1, &VBO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-        float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.5f,  0.5f, 0.0f,
-        };
-
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-        glBindVertexArray(VAO);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
 
         while (context.windowShoudNotClose())
         {
