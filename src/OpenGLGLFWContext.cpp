@@ -50,6 +50,15 @@ bool rdr::OpenGLGLFWContext::windowShoudNotClose() const noexcept(true)
     return !glfwWindowShouldClose(m_window);
 }
 
+rdr::WindowSize rdr::OpenGLGLFWContext::getWindowSize() const noexcept(true)
+{
+    int w, h;
+
+    glfwGetWindowSize(m_window, &w, &h);
+
+    return { static_cast<unsigned>(w), static_cast<unsigned>(h) };
+}
+
 void rdr::OpenGLGLFWContext::onFrameEnd()
 {
     const double frameEndTimeStamp = glfwGetTime();

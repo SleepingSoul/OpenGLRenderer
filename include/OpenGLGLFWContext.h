@@ -12,16 +12,22 @@ namespace rdr
     DeclareInfoException(WindowCreationFailed);
     DeclareInfoException(OpenGLDynamicSymbolsBindingError);
 
+    struct WindowSize
+    {
+        unsigned width{ 0 };
+        unsigned height{ 0 };
+    };
+
     class OpenGLGLFWContext
     {
     public:
         struct InitParameters
         {
-            int verMajor;
-            int verMinor;
+            int verMajor{ 0 };
+            int verMinor{ 0 };
             std::string windowTitle;
-            unsigned windowHeight;
-            unsigned windowWidth;
+            unsigned windowHeight{ 0 };
+            unsigned windowWidth{ 0 };
         };
 
         explicit OpenGLGLFWContext(const InitParameters& initParams);
@@ -33,6 +39,7 @@ namespace rdr
         OpenGLGLFWContext& operator =(OpenGLGLFWContext&&) = delete;
 
         bool windowShoudNotClose() const noexcept(true);
+        WindowSize getWindowSize() const noexcept(true);
         void onFrameEnd();
 
     private:

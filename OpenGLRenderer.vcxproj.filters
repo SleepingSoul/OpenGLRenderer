@@ -52,7 +52,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\test_shader.vs" />
-    <None Include="data\test_shader.fs" />
+    <None Include="data\debug_shader.fs" />
+    <None Include="data\debug_shader.vs" />
   </ItemGroup>
 </Project>

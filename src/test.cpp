@@ -23,10 +23,27 @@ int main()
         // and renderer will render into this context.
         rdr::OpenGLVoxelRenderer renderer;
 
+        std::vector<rdr::VoxelDrawCall> rdc(5);
+
+        for (size_t i = 0; i < rdc.size(); ++i)
+        {
+            rdc[i].angle = 30.f;
+            rdc[i].position = { 0.f - static_cast<float>(i), 0.f, 0.f };
+            rdc[i].position += glm::vec3{ 0.2f, 0.2f, 0.2f };
+            rdc[i].rotationVec = { 0.2f, 0.2f, 0.2f };
+        }
+
         while (context.windowShoudNotClose())
         {
             renderer.setClearColor(glm::vec4{ 0.f, 0.f, 0.f, 1.f });
-            renderer.renderVoxels();
+
+            auto[width, height] = context.getWindowSize();
+
+            renderer.setCameraPosition({ 0.f, 0.f, -5.f });
+            renderer.setRenderField({ width, height });
+            renderer.setDebugRender(true);
+
+            renderer.renderVoxels(rdc);
 
             context.onFrameEnd();
         }
