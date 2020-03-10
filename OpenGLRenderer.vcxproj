@@ -54,7 +54,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)external\include;$(ProjectDir)external\include\extra_std</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)external\imgui;$(ProjectDir)external\imgui\examples;$(ProjectDir)external\include;$(ProjectDir)external\include\extra_std</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -75,7 +75,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)external\include;$(ProjectDir)external\include\extra_std</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)external\imgui;$(ProjectDir)external\imgui\examples;$(ProjectDir)external\include;$(ProjectDir)external\include\extra_std</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -99,6 +99,12 @@
     <ClInclude Include="include\utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="external\imgui\examples\imgui_impl_glfw.cpp" />
+    <ClCompile Include="external\imgui\examples\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="external\imgui\imgui.cpp" />
+    <ClCompile Include="external\imgui\imgui_demo.cpp" />
+    <ClCompile Include="external\imgui\imgui_draw.cpp" />
+    <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\OpenGLGLFWContext.cpp" />
     <ClCompile Include="src\OpenGLVoxelRenderer.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />

@@ -4,6 +4,7 @@
 #include <string_view>
 #include <functional>
 #include <utils.h>
+#include <glm/glm.hpp>
 
 struct GLFWwindow;
 
@@ -11,12 +12,6 @@ namespace rdr
 {
     DeclareInfoException(WindowCreationFailed);
     DeclareInfoException(OpenGLDynamicSymbolsBindingError);
-
-    struct WindowSize
-    {
-        unsigned width{ 0 };
-        unsigned height{ 0 };
-    };
 
     class OpenGLGLFWContext
     {
@@ -39,7 +34,9 @@ namespace rdr
         OpenGLGLFWContext& operator =(OpenGLGLFWContext&&) = delete;
 
         bool windowShoudNotClose() const noexcept(true);
-        WindowSize getWindowSize() const noexcept(true);
+        glm::ivec2 getWindowSize() const noexcept(true);
+
+        void onFrameStart();
         void onFrameEnd();
 
     private:

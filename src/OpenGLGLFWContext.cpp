@@ -1,15 +1,22 @@
 #include "OpenGLGLFWContext.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 #include <string_utils.h>
 
 
-namespace rdr_private
+namespace
 {
     void framebufferSizeCallback(GLFWwindow* window, int width, int height)
     {
         glViewport(0, 0, width, height);
     }
+
+    const std::string_view GLSLVersion = "#version 330 core";
 }
 
 rdr::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
@@ -37,11 +44,25 @@ rdr::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
         throw OpenGLDynamicSymbolsBindingError(estd::format("GLAD load error. Code: %d", dllLoadResult));
     }
 
-    glfwSetFramebufferSizeCallback(m_window, &rdr_private::framebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(m_window, &framebufferSizeCallback);
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(m_window, true);
+    ImGui_ImplOpenGL3_Init(GLSLVersion.data());
 }
 
 rdr::OpenGLGLFWContext::~OpenGLGLFWContext()
 {
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
     glfwTerminate();
 }
 
@@ -50,13 +71,20 @@ bool rdr::OpenGLGLFWContext::windowShoudNotClose() const noexcept(true)
     return !glfwWindowShouldClose(m_window);
 }
 
-rdr::WindowSize rdr::OpenGLGLFWContext::getWindowSize() const noexcept(true)
+glm::ivec2 rdr::OpenGLGLFWContext::getWindowSize() const noexcept(true)
 {
-    int w, h;
+    glm::ivec2 result;
 
-    glfwGetWindowSize(m_window, &w, &h);
+    glfwGetWindowSize(m_window, &result.x, &result.y);
 
-    return { static_cast<unsigned>(w), static_cast<unsigned>(h) };
+    return result;
+}
+
+void rdr::OpenGLGLFWContext::onFrameStart()
+{
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
 }
 
 void rdr::OpenGLGLFWContext::onFrameEnd()
@@ -65,7 +93,13 @@ void rdr::OpenGLGLFWContext::onFrameEnd()
     m_FPS = static_cast<unsigned>(1. / (frameEndTimeStamp - m_lastTimeStamp));
     m_lastTimeStamp = frameEndTimeStamp;
 
+    bool s = true;
+    ImGui::ShowDemoWindow(&s);
+
     glfwSetWindowTitle(m_window, estd::format("%s, fps: %u", m_title.c_str(), m_FPS).c_str());
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     glfwSwapBuffers(m_window);
     glfwPollEvents();
