@@ -1,4 +1,5 @@
 #include "OpenGLGLFWContext.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -16,11 +17,23 @@ namespace
         glViewport(0, 0, width, height);
     }
 
-    const std::string_view GLSLVersion = "#version 330 core";
+    void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
+    {
+        const auto& mapping = *static_cast<std::multimap<int, std::function<void(int, int, int)>>*>(glfwGetWindowUserPointer(window));
+
+        auto [cbBegin, cbEnd] = mapping.equal_range(key);
+
+        while (cbBegin != cbEnd)
+        {
+            std::invoke(cbBegin->second, scancode, action, mode);
+            ++cbBegin;
+        }
+    }
 }
 
 rdr::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     : m_title(initParams.windowTitle)
+    , m_options()
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, initParams.verMajor);
@@ -45,6 +58,9 @@ rdr::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     }
 
     glfwSetFramebufferSizeCallback(m_window, &framebufferSizeCallback);
+    glfwSetKeyCallback(m_window, &keyboardCallback);
+
+    glfwSetWindowUserPointer(m_window, &m_keysMapping);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -54,7 +70,23 @@ rdr::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(m_window, true);
-    ImGui_ImplOpenGL3_Init(GLSLVersion.data());
+    ImGui_ImplOpenGL3_Init(initParams.glslVersion.c_str());
+
+    addKeyboardCallback(GLFW_KEY_F1, [this](int scancode, int action, int mode)
+    {
+        if (action == GLFW_PRESS)
+        {
+            m_options.showFPS = !m_options.showFPS;
+        }
+    });
+
+    addKeyboardCallback(GLFW_KEY_ESCAPE, [this](int scancode, int action, int mode)
+    {
+        if (action == GLFW_PRESS)
+        {
+            glfwSetWindowShouldClose(m_window, true);
+        }
+    });
 }
 
 rdr::OpenGLGLFWContext::~OpenGLGLFWContext()
@@ -80,6 +112,11 @@ glm::ivec2 rdr::OpenGLGLFWContext::getWindowSize() const noexcept(true)
     return result;
 }
 
+void rdr::OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback keyCallback)
+{
+    m_keysMapping.emplace(glfwKeyCode, std::move(keyCallback));
+}
+
 void rdr::OpenGLGLFWContext::onFrameStart()
 {
     ImGui_ImplOpenGL3_NewFrame();
@@ -93,10 +130,11 @@ void rdr::OpenGLGLFWContext::onFrameEnd()
     m_FPS = static_cast<unsigned>(1. / (frameEndTimeStamp - m_lastTimeStamp));
     m_lastTimeStamp = frameEndTimeStamp;
 
-    bool s = true;
-    ImGui::ShowDemoWindow(&s);
+    if (m_options.showFPS)
+    {
+        ImGui::Text("FPS: %u", m_FPS);
+    }
 
-    glfwSetWindowTitle(m_window, estd::format("%s, fps: %u", m_title.c_str(), m_FPS).c_str());
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -17,11 +17,11 @@ int main()
         params.windowWidth = 800;
         params.windowHeight = 600;
         params.windowTitle = "OpenGLRenderer test";
+        params.glslVersion = "#version 330 core";
 
         try
         {
             rdr::OpenGLGLFWContext context(params);
-
 
             // After context is initialized, we can create an OpenGL Renderer to render using the existing context. Only 1 contexts exists
             // and renderer will render into this context.
@@ -31,10 +31,9 @@ int main()
 
             for (size_t i = 0; i < rdc.size(); ++i)
             {
-                rdc[i].angle = 30.f;
-                rdc[i].position = { 0.f - static_cast<float>(i), 0.f, 0.f };
-                rdc[i].position += glm::vec3{ 0.2f, 0.2f, 0.2f };
+                rdc[i].position = { -0.5f + 0.2f * i, 0.f, 0.f };
                 rdc[i].rotationVec = { 0.2f, 0.2f, 0.2f };
+                rdc[i].angle = 30.f;
             }
 
             while (context.windowShoudNotClose())
