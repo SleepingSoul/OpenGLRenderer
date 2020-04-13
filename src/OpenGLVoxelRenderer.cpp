@@ -5,6 +5,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#ifdef RDR_FINAL
+#include <easy/profiler.h>
+#endif
+
 
 namespace
 {
@@ -142,6 +146,8 @@ void rdr::OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
 
 void rdr::OpenGLVoxelRenderer::debugRenderVoxel()
 {
+    EASY_FUNCTION(profiler::colors::Magenta)
+
     for (GLuint i = 0; i < Voxel::NumVertices; i += 3)
     {
         glDrawArrays(GL_LINE_LOOP, i, 3);

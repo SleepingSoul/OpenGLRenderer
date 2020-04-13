@@ -4,10 +4,15 @@
 #include <OpenGLGLFWContext.h>
 #include <thread>
 #include <future>
+#ifdef RDR_FINAL
+#include <easy/profiler.h>
+#endif
 
 
 int main()
 {
+    EASY_PROFILER_ENABLE;
+
     auto retVal = std::async(std::launch::async, []
     {
         // Creating and initializing OpenGL context (should be always initialized before anything else opengl-ish).
@@ -51,6 +56,8 @@ int main()
                 context.onFrameEnd();
             }
 
+            volatile auto res = profiler::dumpBlocksToFile("Profile.prof");
+
             return 0;
         }
         catch (const rdr::OpenGLDynamicSymbolsBindingError & err)
@@ -64,7 +71,6 @@ int main()
             return -1;
         }
     });
-
 
     return retVal.get();
 }

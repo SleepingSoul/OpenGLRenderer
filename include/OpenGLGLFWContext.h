@@ -17,6 +17,7 @@ namespace rdr
 
     class OpenGLGLFWContext
     {
+        NonCopyableMovable(OpenGLGLFWContext)
     public:
         using GLFWKeyCallback = std::function<void(int, int, int)>;
 
@@ -32,11 +33,6 @@ namespace rdr
 
         explicit OpenGLGLFWContext(const InitParameters& initParams);
         ~OpenGLGLFWContext();
-
-        OpenGLGLFWContext(const OpenGLGLFWContext&) = delete;
-        OpenGLGLFWContext& operator =(const OpenGLGLFWContext&) = delete;
-        OpenGLGLFWContext(OpenGLGLFWContext&&) = delete;
-        OpenGLGLFWContext& operator =(OpenGLGLFWContext&&) = delete;
 
         bool windowShoudNotClose() const noexcept(true);
         glm::ivec2 getWindowSize() const noexcept(true);

@@ -18,6 +18,7 @@ namespace rdr
 
     class ShaderProgram
     {
+        NonCopyable(ShaderProgram)
     public:
         using ErrorInfoBuffer = std::array<char, 1024>;
 
@@ -62,12 +63,12 @@ namespace rdr
         const std::string_view& getErrorInfo() const { return m_errorInfo; }
 
     private:
-        GLuint m_ID;
+        GLuint m_ID{ 0 };
 
         std::string m_errorInfo;
 
         void validateShaderProgram(GLuint ID);
         void validateShader(GLuint ID);
-        void writeErrorInfo(const ErrorInfoBuffer& source);
+        void writeErrorInfoAndThrow(const ErrorInfoBuffer& source);
     };
 }

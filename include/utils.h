@@ -18,4 +18,14 @@ class name final : public rdr_impl::InfoException\
 public:\
     using Base = rdr_impl::InfoException;\
     using Base::Base;\
-}
+}\
+
+#define NonCopyable(classname)\
+classname(const classname&) = delete;\
+classname& operator =(const classname&) = delete;\
+
+#define NonMovable(classname)\
+classname(classname&&) = delete;\
+classname& operator =(classname&&) = delete;\
+
+#define NonCopyableMovable(classname) NonCopyable(classname)NonMovable(classname)
